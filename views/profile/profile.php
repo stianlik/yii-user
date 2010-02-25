@@ -1,26 +1,10 @@
-<?php $this->pageTitle=Yii::app()->name . ' - '.Yii::t("user", "Profile");
+<?php $this->pageTitle=Yii::app()->name . ' - '.UserModule::t("Profile");
 $this->breadcrumbs=array(
-	Yii::t("user", "Profile"),
+	UserModule::t("Profile"),
 );
-?><h2><?php echo Yii::t("user", 'Your profile'); ?></h2>
+?><h2><?php echo UserModule::t('Your profile'); ?></h2>
+<?php echo $this->renderPartial('menu'); ?>
 
-<ul class="actions">
-<?php 
-if(Yii::app()->User->isAdmin()) {
-?>
-<li><?php echo CHtml::link(Yii::t("user", 'Manage User'),array('admin')); ?></li>
-<?php 
-} else {
-?>
-<li><?php echo CHtml::link(Yii::t("user", 'List User'),array('index')); ?></li>
-<?php
-}
-?>
-<li><?php echo CHtml::link(Yii::t("user", 'Profile'),array('profile')); ?></li>
-<li><?php echo CHtml::link(Yii::t("user", 'Edit'),array('edit')); ?></li>
-<li><?php echo CHtml::link(Yii::t("user", 'Change password'),array('changepassword')); ?></li>
-<li><?php echo CHtml::link(Yii::t("user", 'Logout'),array('logout')); ?></li>
-</ul>
 <?php if(Yii::app()->user->hasFlash('profileMessage')): ?>
 <div class="success">
 <?php echo Yii::app()->user->getFlash('profileMessage'); ?>
@@ -40,7 +24,7 @@ if(Yii::app()->User->isAdmin()) {
 				//echo "<pre>"; print_r($profile); die();
 			?>
 <tr>
-	<th class="label"><?php echo CHtml::encode(Yii::t("user", $field->title)); ?>
+	<th class="label"><?php echo CHtml::encode(UserModule::t($field->title)); ?>
 </th>
     <td><?php echo CHtml::encode($profile->getAttribute($field->varname)); ?>
 </td>
@@ -52,7 +36,7 @@ if(Yii::app()->User->isAdmin()) {
 <tr>
 	<th class="label"><?php echo CHtml::encode($model->getAttributeLabel('password')); ?>
 </th>
-    <td><?php echo CHtml::link(Yii::t("user", "Change password"),array("changepassword")); ?>
+    <td><?php echo CHtml::link(UserModule::t("Change password"),array("changepassword")); ?>
 </td>
 </tr>
 <tr>

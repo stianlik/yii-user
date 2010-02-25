@@ -1,10 +1,10 @@
-<?php $this->pageTitle=Yii::app()->name . ' - '.Yii::t("user", "Registration");
+<?php $this->pageTitle=Yii::app()->name . ' - '.UserModule::t("Registration");
 $this->breadcrumbs=array(
-	Yii::t("user", "Registration"),
+	UserModule::t("Registration"),
 );
 ?>
 
-<h1><?php echo Yii::t("user", "Registration"); ?></h1>
+<h1><?php echo UserModule::t("Registration"); ?></h1>
 
 <?php if(Yii::app()->user->hasFlash('registration')): ?>
 <div class="success">
@@ -15,7 +15,7 @@ $this->breadcrumbs=array(
 <div class="form">
 <?php echo CHtml::beginForm(); ?>
 
-	<p class="note"><?php echo Yii::t("user", 'Fields with <span class="required">*</span> are required.'); ?></p>
+	<p class="note"><?php echo UserModule::t('Fields with <span class="required">*</span> are required.'); ?></p>
 	
 	<?php echo CHtml::errorSummary($form); ?>
 	<?php echo CHtml::errorSummary($profile); ?>
@@ -29,7 +29,7 @@ $this->breadcrumbs=array(
 	<?php echo CHtml::activeLabelEx($form,'password'); ?>
 	<?php echo CHtml::activePasswordField($form,'password'); ?>
 	<p class="hint">
-	<?php echo Yii::t("user", "Minimal password length 4 symbols."); ?>
+	<?php echo UserModule::t("Minimal password length 4 symbols."); ?>
 	</p>
 	</div>
 	
@@ -70,13 +70,13 @@ $this->breadcrumbs=array(
 		<?php $this->widget('CCaptcha'); ?>
 		<?php echo CHtml::activeTextField($form,'verifyCode'); ?>
 		</div>
-		<p class="hint"><?php echo Yii::t("user","Please enter the letters as they are shown in the image above."); ?>
-		<br/><?php echo Yii::t("user","Letters are not case-sensitive."); ?></p>
+		<p class="hint"><?php echo UserModule::t("Please enter the letters as they are shown in the image above."); ?>
+		<br/><?php echo UserModule::t("Letters are not case-sensitive."); ?></p>
 	</div>
 	<?php endif; ?>
 	
 	<div class="row submit">
-		<?php echo CHtml::submitButton(Yii::t("user", "Registration")); ?>
+		<?php echo CHtml::submitButton(UserModule::t("Registration")); ?>
 	</div>
 
 <?php echo CHtml::endForm(); ?>

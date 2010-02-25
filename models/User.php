@@ -9,15 +9,6 @@ class User extends CActiveRecord
 	public $username;
 	public $password;
 	public $email;
-	public $hash='md5';
-	public $sendActivationMail=true;
-	public $loginNotActiv=false;
-	public $autoLogin=true;
-	public $registrationUrl = array("user/registration");
-	public $recoveryUrl = array("user/recovery");
-	public $loginUrl = array("user/login");
-	public $returnUrl = array("user/profile");
-	public $returnLogoutUrl = array("user/login");
 	
 	/**
 	 * The followings are the available columns in table 'users':
@@ -58,12 +49,12 @@ class User extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			#array('username, password, email', 'required'),
-			array('username', 'length', 'max'=>20, 'min' => 3,'message' => Yii::t("user", "Incorrect username (length between 3 and 20 characters).")),
-			array('password', 'length', 'max'=>128, 'min' => 4,'message' => Yii::t("user", "Incorrect password (minimal length 4 symbols).")),
+			array('username', 'length', 'max'=>20, 'min' => 3,'message' => UserModule::t("Incorrect username (length between 3 and 20 characters).")),
+			array('password', 'length', 'max'=>128, 'min' => 4,'message' => UserModule::t("Incorrect password (minimal length 4 symbols).")),
 			array('email', 'email'),
-			array('username', 'unique', 'message' => Yii::t("user", "This user's name already exists.")),
-			array('email', 'unique', 'message' => Yii::t("user", "This user's email adress already exists.")),
-			array('username', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => Yii::t("user", "Incorrect symbol's. (A-z0-9)")),
+			array('username', 'unique', 'message' => UserModule::t("This user's name already exists.")),
+			array('email', 'unique', 'message' => UserModule::t("This user's email adress already exists.")),
+			array('username', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => UserModule::t("Incorrect symbol's. (A-z0-9)")),
 			array('status', 'in', 'range'=>array(0,1,-1)),
 			array('superuser', 'in', 'range'=>array(0,1)),
 			array('username, password, email, createtime, lastvisit, superuser, status', 'required'),
@@ -89,31 +80,18 @@ class User extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'username'=>Yii::t("user", "username"),
-			'password'=>Yii::t("user", "password"),
-			'verifyPassword'=>Yii::t("user", "Retype Password"),
-			'email'=>Yii::t("user", "E-mail"),
-			'verifyCode'=>Yii::t("user", "Verification Code"),
+			'username'=>UserModule::t("username"),
+			'password'=>UserModule::t("password"),
+			'verifyPassword'=>UserModule::t("Retype Password"),
+			'email'=>UserModule::t("E-mail"),
+			'verifyCode'=>UserModule::t("Verification Code"),
 			'id' => 'Id',
-			'activkey' => Yii::t("user", "activation key"),
-			'createtime' => Yii::t("user", "Registration date"),
-			'lastvisit' => Yii::t("user", "Last visit"),
-			'superuser' => Yii::t("user", "Superuser"),
-			'status' => Yii::t("user", "Status"),
+			'activkey' => UserModule::t("activation key"),
+			'createtime' => UserModule::t("Registration date"),
+			'lastvisit' => UserModule::t("Last visit"),
+			'superuser' => UserModule::t("Superuser"),
+			'status' => UserModule::t("Status"),
 		);
-	}
-	
-	/**
-	 * @return hash string.
-	 */
-	public function encrypting($string="") {
-		$hash = Yii::app()->User->hash;
-		if ($hash=="md5")
-			return md5($string);
-		if ($hash=="sha1")
-			return sha1($string);
-		else
-			return hash($hash,$string);
 	}
 	
 	public function scopes()
@@ -131,19 +109,22 @@ class User extends CActiveRecord
             'superuser'=>array(
                 'condition'=>'superuser=1',
             ),
+            'safe'=>array(
+            	'select' => 'id, username, email, createtime, lastvisit',
+            ),
         );
     }
 	
 	public function itemAlias($type,$code=NULL) {
 		$_items = array(
 			'UserStatus' => array(
-				'0' => Yii::t("user", 'Not active'),
-				'1' => Yii::t("user", 'Active'),
-				'-1'=> Yii::t("user", 'Banned'),
+				'0' => UserModule::t('Not active'),
+				'1' => UserModule::t('Active'),
+				'-1'=> UserModule::t('Banned'),
 			),
 			'AdminStatus' => array(
-				'0' => Yii::t("user", 'No'),
-				'1' => Yii::t("user", 'Yes'),
+				'0' => UserModule::t('No'),
+				'1' => UserModule::t('Yes'),
 			),
 		);
 		if (isset($code))
@@ -162,20 +143,5 @@ class User extends CActiveRecord
 		foreach ($admins as $admin)
 			array_push($return_name,$admin->username);
 		return $return_name;
-	}
-	
-	/**
-	 * Return admin status.
-	 * @return boolean
-	 */
-	public function isAdmin() {
-		if(Yii::app()->user->isGuest)
-			return false;
-		else {
-			if(User::model()->active()->superuser()->findbyPk(Yii::app()->user->id))
-				return true;
-			else
-				return false;
-		}
 	}
 }

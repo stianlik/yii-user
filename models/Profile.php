@@ -48,27 +48,27 @@ class Profile extends CActiveRecord
 				array_push($numerical,$field->varname);
 			if ($field->field_type=='VARCHAR'||$field->field_type=='TEXT') {
 				$field_rule = array($field->varname, 'length', 'max'=>$field->field_size, 'min' => $field->field_size_min);
-				if ($field->error_message) $field_rule['message'] = Yii::t("user", $field->error_message);
+				if ($field->error_message) $field_rule['message'] = UserModule::t($field->error_message);
 				array_push($rules,$field_rule);
 			}
 			if ($field->field_type=='DATE') {
 				$field_rule = array($field->varname, 'type', 'type' => 'date', 'dateFormat' => 'yyyy-mm-dd');
-				if ($field->error_message) $field_rule['message'] = Yii::t("user", $field->error_message);
+				if ($field->error_message) $field_rule['message'] = UserModule::t($field->error_message);
 				array_push($rules,$field_rule);
 			}
 			if ($field->match) {
 				$field_rule = array($field->varname, 'match', 'pattern' => $field->match);
-				if ($field->error_message) $field_rule['message'] = Yii::t("user", $field->error_message);
+				if ($field->error_message) $field_rule['message'] = UserModule::t($field->error_message);
 				array_push($rules,$field_rule);
 			}
 			if ($field->range) {
 				$field_rule = array($field->varname, 'in', 'range' => explode(';'.$field->range));
-				if ($field->error_message) $field_rule['message'] = Yii::t("user", $field->error_message);
+				if ($field->error_message) $field_rule['message'] = UserModule::t($field->error_message);
 				array_push($rules,$field_rule);
 			}
 			if ($field->other_validator) {
 				$field_rule = array($field->varname, $field->other_validator);
-				if ($field->error_message) $field_rule['message'] = Yii::t("user", $field->error_message);
+				if ($field->error_message) $field_rule['message'] = UserModule::t($field->error_message);
 				array_push($rules,$field_rule);
 			}
 			
@@ -96,12 +96,12 @@ class Profile extends CActiveRecord
 	public function attributeLabels()
 	{
 		$labels = array(
-			'user_id' => Yii::t("user", 'User ID'),
+			'user_id' => UserModule::t('User ID'),
 		);
 		$model=ProfileField::model()->forOwner()->findAll();
 		
 		foreach ($model as $field)
-			$labels[$field->varname] = Yii::t("user", $field->title);
+			$labels[$field->varname] = UserModule::t($field->title);
 			
 		return $labels;
 	}

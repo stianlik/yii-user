@@ -1,15 +1,14 @@
 <?php
 $this->breadcrumbs=array(
-	Yii::t("user", "Users"),
+	UserModule::t("Users"),
 );
 ?>
 
-<h1>List User</h1>
-<?php if(Yii::app()->User->isAdmin()) {
+<h1><?php echo UserModule::t("List User"); ?></h1>
+<?php if(UserModule::isAdmin()) {
 	?><ul class="actions">
-	<li><?php echo CHtml::link(Yii::t("user", 'Create User'),array('create')); ?></li>
-	<li><?php echo CHtml::link(Yii::t("user", 'Manage User'),array('admin')); ?></li>
-	<li><?php echo CHtml::link(Yii::t("user", 'Manage Profile Field'),array('profileField/admin')); ?></li>
+	<li><?php echo CHtml::link(UserModule::t('Manage User'),array('/user/admin')); ?></li>
+	<li><?php echo CHtml::link(UserModule::t('Manage Profile Field'),array('profileField/admin')); ?></li>
 </ul><!-- actions --><?php 
 } ?>
 <?php $this->widget('zii.widgets.grid.CGridView', array(

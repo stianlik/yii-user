@@ -10,8 +10,8 @@ CREATE TABLE tbl_users (
   status int(1) NOT NULL DEFAULT '0'
 );
 
-INSERT INTO tbl_users (id, username, password, email, activkey, createtime, lastvisit, superuser, status) VALUES (1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'webmaster@example.com', '21232f297a57a5a743894a0e4a801fc3', 0, 1261146094, 1, 1);
-INSERT INTO tbl_users (id, username, password, email, activkey, createtime, lastvisit, superuser, status) VALUES (2, 'demo', 'fe01ce2a7fbac8fafaed7c982a04e229', 'demo@example.com', 'fe01ce2a7fbac8fafaed7c982a04e229', 0, 1261145913, 0, 1);
+INSERT INTO tbl_users (id, username, password, email, activkey, createtime, lastvisit, superuser, status) VALUES (1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'webmaster@example.com', '21232f297a57a5a743894a0e4a801fc3', 1261146094, 1261146094, 1, 1);
+INSERT INTO tbl_users (id, username, password, email, activkey, createtime, lastvisit, superuser, status) VALUES (2, 'demo', 'fe01ce2a7fbac8fafaed7c982a04e229', 'demo@example.com', 'fe01ce2a7fbac8fafaed7c982a04e229', 1261146094, 1261146094, 0, 1);
 
 CREATE TABLE tbl_profiles (
   user_id INTEGER NOT NULL PRIMARY KEY,

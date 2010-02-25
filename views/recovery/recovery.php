@@ -1,11 +1,11 @@
-<?php $this->pageTitle=Yii::app()->name . ' - '.Yii::t("user", "Restore");
+<?php $this->pageTitle=Yii::app()->name . ' - '.UserModule::t("Restore");
 $this->breadcrumbs=array(
-	Yii::t("user", "Login") => array('/user/login'),
-	Yii::t("user", "Restore"),
+	UserModule::t("Login") => array('/user/login'),
+	UserModule::t("Restore"),
 );
 ?>
 
-<h1><?php echo Yii::t("user", "Restore"); ?></h1>
+<h1><?php echo UserModule::t("Restore"); ?></h1>
 
 <?php if(Yii::app()->user->hasFlash('recoveryMessage')): ?>
 <div class="success">
@@ -21,11 +21,11 @@ $this->breadcrumbs=array(
 	<div class="row">
 		<?php echo CHtml::activeLabel($form,'login_or_email'); ?>
 		<?php echo CHtml::activeTextField($form,'login_or_email') ?>
-		<p class="hint"><?php echo Yii::t("user","Please enter your login or email addres."); ?></p>
+		<p class="hint"><?php echo UserModule::t("Please enter your login or email addres."); ?></p>
 	</div>
 	
 	<div class="row submit">
-		<?php echo CHtml::submitButton(Yii::t("user", "Restore")); ?>
+		<?php echo CHtml::submitButton(UserModule::t("Restore")); ?>
 	</div>
 
 <?php echo CHtml::endForm(); ?>

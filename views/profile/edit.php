@@ -1,27 +1,11 @@
-<?php $this->pageTitle=Yii::app()->name . ' - '.Yii::t("user", "Profile");
+<?php $this->pageTitle=Yii::app()->name . ' - '.UserModule::t("Profile");
 $this->breadcrumbs=array(
-	Yii::t("user", "Profile")=>array('profile'),
-	Yii::t("user", "Edit"),
+	UserModule::t("Profile")=>array('profile'),
+	UserModule::t("Edit"),
 );
-?><h2><?php echo Yii::t("user", 'Edit profile'); ?></h2>
+?><h2><?php echo UserModule::t('Edit profile'); ?></h2>
+<?php echo $this->renderPartial('menu'); ?>
 
-<ul class="actions">
-<?php 
-if(Yii::app()->User->isAdmin()) {
-?>
-<li><?php echo CHtml::link(Yii::t("user", 'Manage User'),array('admin')); ?></li>
-<?php 
-} else {
-?>
-<li><?php echo CHtml::link(Yii::t("user", 'List User'),array('index')); ?></li>
-<?php
-}
-?>
-<li><?php echo CHtml::link(Yii::t("user", 'Profile'),array('profile')); ?></li>
-<li><?php echo CHtml::link(Yii::t("user", 'Edit'),array('edit')); ?></li>
-<li><?php echo CHtml::link(Yii::t("user", 'Change password'),array('changepassword')); ?></li>
-<li><?php echo CHtml::link(Yii::t("user", 'Logout'),array('logout')); ?></li>
-</ul>
 <?php if(Yii::app()->user->hasFlash('profileMessage')): ?>
 <div class="success">
 <?php echo Yii::app()->user->getFlash('profileMessage'); ?>
@@ -31,7 +15,7 @@ if(Yii::app()->User->isAdmin()) {
 
 <?php echo CHtml::beginForm(); ?>
 
-	<p class="note"><?php echo Yii::t("user", 'Fields with <span class="required">*</span> are required.'); ?></p>
+	<p class="note"><?php echo UserModule::t('Fields with <span class="required">*</span> are required.'); ?></p>
 
 	<?php echo CHtml::errorSummary($model);
 		  echo CHtml::errorSummary($profile); ?>
@@ -67,7 +51,7 @@ if(Yii::app()->User->isAdmin()) {
 	</div>
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? Yii::t("user", 'Create') : Yii::t("user", 'Save')); ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? UserModule::t('Create') : UserModule::t('Save')); ?>
 	</div>
 
 <?php echo CHtml::endForm(); ?>

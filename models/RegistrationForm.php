@@ -11,14 +11,14 @@ class RegistrationForm extends User {
 	public function rules() {
 		return array(
 			array('username, password, verifyPassword, email', 'required'),
-			array('username', 'length', 'max'=>20, 'min' => 3,'message' => Yii::t("user", "Incorrect username (length between 3 and 20 characters).")),
-			array('password', 'length', 'max'=>128, 'min' => 4,'message' => Yii::t("user", "Incorrect password (minimal length 4 symbols).")),
+			array('username', 'length', 'max'=>20, 'min' => 3,'message' => UserModule::t("Incorrect username (length between 3 and 20 characters).")),
+			array('password', 'length', 'max'=>128, 'min' => 4,'message' => UserModule::t("Incorrect password (minimal length 4 symbols).")),
 			array('email', 'email'),
-			array('username', 'unique', 'message' => Yii::t("user", "This user\'s name already exists.")),
-			array('email', 'unique', 'message' => Yii::t("user", "This user\'s email adress already exists.")),
-			array('password', 'compare', 'compareAttribute'=>'verifyPassword', 'message' => Yii::t("user", "Retype Password is incorrect.")),
+			array('username', 'unique', 'message' => UserModule::t("This user's name already exists.")),
+			array('email', 'unique', 'message' => UserModule::t("This users's email adress already exists.")),
+			array('password', 'compare', 'compareAttribute'=>'verifyPassword', 'message' => UserModule::t("Retype Password is incorrect.")),
 			array('verifyCode', 'captcha', 'allowEmpty'=>!extension_loaded('gd')),
-			array('username', 'match', 'pattern' => '/^[A-Za-z0-9\s,]+$/u','message' => Yii::t("user", "Incorrect symbol's. (A-z0-9)")),
+			array('username', 'match', 'pattern' => '/^[A-Za-z0-9\s,]+$/u','message' => UserModule::t("Incorrect symbol's. (A-z0-9)")),
 		);
 	}
 	

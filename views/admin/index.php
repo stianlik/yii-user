@@ -1,16 +1,17 @@
 <?php
 $this->breadcrumbs=array(
-	Yii::t("user", 'Users')=>array('index'),
-	Yii::t("user", 'Manage'),
+	UserModule::t('Users')=>array('admin'),
+	UserModule::t('Manage'),
 );
 ?>
-<h1>Manage Users</h1>
+<h1><?php echo UserModule::t("Manage Users"); ?></h1>
 
-<ul class="actions">
-	<li><?php echo CHtml::link(Yii::t("user", 'List User'),array('index')); ?></li>
-	<li><?php echo CHtml::link(Yii::t("user", 'Create User'),array('create')); ?></li>
-	<li><?php echo CHtml::link(Yii::t("user", 'Manage Profile Field'),array('profileField/admin')); ?></li>
-</ul><!-- actions -->
+<?php echo $this->renderPartial('_menu', array(
+		'list'=> array(
+			CHtml::link(UserModule::t('Create User'),array('create')),
+		),
+	));
+?>
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'dataProvider'=>$dataProvider,
@@ -18,12 +19,12 @@ $this->breadcrumbs=array(
 		array(
 			'name' => 'id',
 			'type'=>'raw',
-			'value' => 'CHtml::link(CHtml::encode($data->id),array("user/update","id"=>$data->id))',
+			'value' => 'CHtml::link(CHtml::encode($data->id),array("admin/update","id"=>$data->id))',
 		),
 		array(
 			'name' => 'username',
 			'type'=>'raw',
-			'value' => 'CHtml::link(CHtml::encode($data->username),array("user/view","id"=>$data->id))',
+			'value' => 'CHtml::link(CHtml::encode($data->username),array("admin/view","id"=>$data->id))',
 		),
 		array(
 			'name'=>'email',
