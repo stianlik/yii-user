@@ -14,6 +14,7 @@ class User extends CActiveRecord
 	 * @var integer $id
 	 * @var string $username
 	 * @var string $password
+	 * @var string $salt
 	 * @var string $email
 	 * @var string $activkey
 	 * @var integer $createtime
@@ -122,7 +123,7 @@ class User extends CActiveRecord
                 'condition'=>'superuser=1',
             ),
             'notsafe'=>array(
-            	'select' => 'id, username, password, email, activkey, create_at, lastvisit_at, superuser, status',
+            	'select' => 'id, username, password, email, activkey, create_at, lastvisit_at, superuser, status, salt',
             ),
         );
     }
@@ -181,7 +182,16 @@ class User extends CActiveRecord
 			),
         ));
     }
-
+    
+    public function setNewPassword($password, $repeatedPassword = null) {
+    	$this->activkey = UserModule::password(microtime(),$password);
+    	$this->salt = time();
+    	if ($repeatedPassword !== null) {
+    		$this->verifyPassword = UserModule::password($repeatedPassword, $this->salt);
+    	}
+    	$this->password = UserModule::password($password, $this->salt);
+    }
+    
     public function getCreatetime() {
         return strtotime($this->create_at);
     }
