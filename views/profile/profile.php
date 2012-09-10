@@ -3,10 +3,8 @@ $this->breadcrumbs=array(
 	UserModule::t("Profile"),
 );
 $this->menu=array(
-	((UserModule::isAdmin())
-		?array('label'=>UserModule::t('Manage Users'), 'url'=>array('/user/admin'))
-		:array()),
-    array('label'=>UserModule::t('List User'), 'url'=>array('/user/user/index')),
+	array('label'=>UserModule::t('Manage Users'), 'url'=>array('/user/admin'), 'visible' => UserModule::isAdmin()),
+    array('label'=>UserModule::t('List User'), 'url'=>array('/user/user/index'), 'visible' => UserModule::isAdmin()),
     array('label'=>UserModule::t('Edit'), 'url'=>array('edit')),
     array('label'=>UserModule::t('Change password'), 'url'=>array('changepassword')),
     array('label'=>UserModule::t('Logout'), 'url'=>array('/user/logout')),
