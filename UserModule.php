@@ -170,6 +170,10 @@ class UserModule extends CWebModule
 			return hash($hash,$string);
 	}
 	
+	public static function password($password = '', $salt = '') {
+		return self::encrypting($password . $salt);
+	}
+	
 	/**
 	 * @param $place
 	 * @return boolean 

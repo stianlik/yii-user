@@ -21,8 +21,8 @@ class RecoveryController extends Controller
 			    		if(isset($_POST['UserChangePassword'])) {
 							$form2->attributes=$_POST['UserChangePassword'];
 							if($form2->validate()) {
-								$find->password = Yii::app()->controller->module->encrypting($form2->password);
 								$find->activkey=Yii::app()->controller->module->encrypting(microtime().$form2->password);
+								$find->password = Yii::app()->controller->module->password($form2->password, $find->activkey);
 								if ($find->status==0) {
 									$find->status = 1;
 								}
