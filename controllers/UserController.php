@@ -12,10 +12,9 @@ class UserController extends Controller
 	 */
 	public function filters()
 	{
-		return CMap::mergeArray(parent::filters(),array(
-			'accessControl', // perform access control for CRUD operations
-		));
+		return CMap::mergeArray(parent::filters(),array('accessControl'));
 	}
+	
 	/**
 	 * Specifies the access control rules.
 	 * This method is used by the 'accessControl' filter.
@@ -24,20 +23,16 @@ class UserController extends Controller
 	public function accessRules()
 	{
 		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
+			array('allow', 'actions' => array('index'), 'users' => UserModule::getAdmins()),
+			array('allow','actions'=>array('view'), 'expression' =>  '$user->id === $_GET["id"]'),
+			array('deny'),
 		);
 	}	
 
 	/**
 	 * Displays a particular model.
 	 */
-	public function actionView()
+	public function actionView($id)
 	{
 		$model = $this->loadModel();
 		$this->render('view',array(
