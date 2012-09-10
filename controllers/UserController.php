@@ -23,7 +23,7 @@ class UserController extends Controller
 	public function accessRules()
 	{
 		return array(
-			array('allow', 'actions' => array('index'), 'users' => UserModule::getAdmins()),
+			array('allow', 'users' => UserModule::getAdmins()),
 			array('allow','actions'=>array('view'), 'expression' =>  '$user->id === $_GET["id"]'),
 			array('deny'),
 		);
