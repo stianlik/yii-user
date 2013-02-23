@@ -34,8 +34,8 @@ class RegistrationController extends Controller
 		    if (Yii::app()->user->id) {
 		    	$this->redirect(Yii::app()->controller->module->profileUrl);
 		    } else {
-		    	if(isset($_POST['RegistrationForm'])) {
-					$model->attributes=$_POST['RegistrationForm'];
+		    	if(isset($_POST['User'])) {
+					$model->attributes=$_POST['User'];
 					$profile->attributes=((isset($_POST['Profile'])?$_POST['Profile']:array()));
 					if($model->validate()&&$profile->validate())
 					{

@@ -31,6 +31,8 @@ class User extends CActiveRecord
 	
 	// Role stuff
 	public $searchProfileRole;
+	
+	private $_scenarios = array('register', 'admin', 'owner');
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -54,56 +56,45 @@ class User extends CActiveRecord
 	 */
 	public function rules()
 	{
-		
-		// Registration
-		if ($this->getScenario() === 'register') {
-			$rules = array(
-				array('username, password, verifyPassword, email', 'required'),
-				array('username', 'length', 'max'=>20, 'min' => 3,'message' => UserModule::t("Incorrect username (length between 3 and 20 characters).")),
-				array('password', 'length', 'max'=>128, 'min' => 4,'message' => UserModule::t("Incorrect password (minimal length 4 symbols).")),
-				array('email', 'email'),
-				array('username', 'unique', 'message' => UserModule::t("This user's name already exists.")),
-				array('email', 'unique', 'message' => UserModule::t("This user's email address already exists.")),
-				//array('verifyPassword', 'compare', 'compareAttribute'=>'password', 'message' => UserModule::t("Retype Password is incorrect.")),
-				array('username', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => UserModule::t("Incorrect symbols (A-z0-9).")),
-			);
-			if (!(isset($_POST['ajax']) && $_POST['ajax']==='registration-form')) {
-				array_push($rules,array('verifyCode', 'captcha', 'allowEmpty'=>!UserModule::doCaptcha('registration')));
+		// TODO scenario should be chosen by controller
+		if (array_search($this->getScenario(), $this->_scenarios, true) === false) {
+			if (Yii::app()->getModule('user')->isAdmin()) {
+				$this->setScenario('admin');
 			}
-			array_push($rules,array('verifyPassword', 'compare', 'compareAttribute'=>'password', 'message' => UserModule::t("Retype Password is incorrect.")));
-			return $rules;
+			else if (Yii::app()->user->id==$this->id) {
+				$this->setScenario('owner');
+			}
 		}
-		else if (Yii::app()->getModule('user')->isAdmin()) {
-			return array(
-				array('searchProfileRole', 'safe'),
-				array('username', 'length', 'max'=>20, 'min' => 3,'message' => UserModule::t("Incorrect username (length between 3 and 20 characters).")),
-				array('password', 'length', 'max'=>128, 'min' => 4,'message' => UserModule::t("Incorrect password (minimal length 4 symbols).")),
-				array('email', 'email'),
-				array('username', 'unique', 'message' => UserModule::t("This user's name already exists.")),
-				array('email', 'unique', 'message' => UserModule::t("This user's email address already exists.")),
-				array('username', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => UserModule::t("Incorrect symbols (A-z0-9).")),
-				array('status', 'in', 'range'=>array(self::STATUS_NOACTIVE,self::STATUS_ACTIVE,self::STATUS_BANNED)),
-				array('superuser', 'in', 'range'=>array(0,1)),
-	            array('create_at', 'default', 'value' => date('Y-m-d H:i:s'), 'setOnEmpty' => true, 'on' => 'insert'),
-	            array('lastvisit_at', 'default', 'value' => '0000-00-00 00:00:00', 'setOnEmpty' => true, 'on' => 'insert'),
-				array('username, email, superuser, status', 'required'),
-				array('superuser, status', 'numerical', 'integerOnly'=>true),
-				array('id, username, password, email, activkey, create_at, lastvisit_at, superuser, status', 'safe', 'on'=>'search'),
-			);
+		
+		$rules = array(
+			// all
+			array('username', 'length', 'max'=>20, 'min' => 3,'message' => UserModule::t("Incorrect username (length between 3 and 20 characters).")),
+			array('password', 'length', 'max'=>128, 'min' => 4,'message' => UserModule::t("Incorrect password (minimal length 4 symbols).")),
+			array('username, email', 'required'),
+			array('email', 'email'),
+			array('username', 'unique', 'message' => UserModule::t("This user's name already exists.")),
+			array('email', 'unique', 'message' => UserModule::t("This user's email address already exists.")),
+			array('username', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => UserModule::t("Incorrect symbols (A-z0-9).")),
+			array('id, username, password, email, activkey, create_at, lastvisit_at, superuser, status', 'safe', 'on'=>'search'),
+			// register
+			array('password, verifyPassword', 'required', 'on' => 'register'),
+			array('verifyPassword', 'compare', 'compareAttribute'=>'password', 'message' => UserModule::t("Retype Password is incorrect."), 'on' => 'register'),
+			// admin
+			array('searchProfileRole', 'safe', 'on' => 'admin'),
+			array('status', 'in', 'range'=>array(self::STATUS_NOACTIVE,self::STATUS_ACTIVE,self::STATUS_BANNED), 'on' => 'admin'),
+			array('superuser', 'in', 'range'=>array(0,1), 'on' =>'admin'),
+            array('create_at', 'default', 'value' => date('Y-m-d H:i:s'), 'setOnEmpty' => true, 'on' => 'admin'),
+            array('lastvisit_at', 'default', 'value' => '0000-00-00 00:00:00', 'setOnEmpty' => true, 'on' => 'admin'),
+			array('superuser, status', 'required', 'on' => 'admin'),
+			array('superuser, status', 'numerical', 'integerOnly'=>true, 'on' => 'admin'),
+			// owner
+		);
+		
+		if (!$this->isAjaxValidation()) {
+			array_push($rules,array('verifyCode', 'captcha', 'allowEmpty'=>!UserModule::doCaptcha('registration'), 'on' => 'register'));
 		}
-		else if (Yii::app()->user->id==$this->id) {
-			return array(
-				array('username, email', 'required'),
-				array('username', 'length', 'max'=>20, 'min' => 3,'message' => UserModule::t("Incorrect username (length between 3 and 20 characters).")),
-				array('email', 'email'),
-				array('username', 'unique', 'message' => UserModule::t("This user's name already exists.")),
-				array('username', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => UserModule::t("Incorrect symbols (A-z0-9).")),
-				array('email', 'unique', 'message' => UserModule::t("This user's email address already exists.")),
-			);
-		}
-		else {
-			return array();
-		}
+		
+		return $rules;
 	}
 
 	/**
@@ -241,5 +232,9 @@ class User extends CActiveRecord
 
     public function setLastvisit($value) {
         $this->lastvisit_at=date('Y-m-d H:i:s',$value);
+    }
+    
+    protected function isAjaxValidation() {
+    	return isset($_POST['ajax']);
     }
 }

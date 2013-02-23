@@ -21,7 +21,7 @@ return array(
 	'E-mail' => 'E-post',
 	'Verification Code' => 'Verifiseringskode',
 	'Retype Password' => 'Skriv inn passord på nytt',
-	'Retype Password is incorrect.' => 'Passordet stemmer ikke',
+	'Retype Password is incorrect.' => 'Passordene er ikke like',
 	'Incorrect password (minimal length 4 symbols).' => 'Feil passord (minimum 4 tegn)',
 	'Incorrect username (length between 3 and 20 characters).' => 'Feil brukernavn (lengde mellom 3 og 20 tegn)',
 	'Incorrect symbol\'s. (A-z0-9)' => 'Feil symbol',
