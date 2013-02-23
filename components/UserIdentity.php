@@ -53,4 +53,12 @@ class UserIdentity extends CUserIdentity
 	{
 		return $this->_id;
 	}
+	
+	/**
+	 * This method is primarly for testing (i.e. simple user mocking)
+	 * @param integer $id ID of the user record
+	 */
+	public function setId($id) {
+		$this->_id = $id;
+	}
 }

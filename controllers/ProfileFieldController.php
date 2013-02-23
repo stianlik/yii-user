@@ -224,7 +224,6 @@ class ProfileFieldController extends Controller
 				$('#dialog-form fieldset .tab-'+tab).each(function(){
 					if ($(this).val()) fparam[tab][$(this).attr('name')] = $(this).val();
 				});
-				
 				if ($.JSON.encode(wparam)!='{}') $('div.widgetparams input').val($.JSON.encode(wparam));
 				if ($.JSON.encode(fparam[tab])!='{}') $('div.other_validator input').val($.JSON.encode(fparam)); 
 				
@@ -289,9 +288,9 @@ class ProfileFieldController extends Controller
 	
 	$('#widgetlist').change(function() {
 		if ($(this).val()) {
-			$('div.widgetparams').show(500);
+			$('div.widgetparams').show(100);
 		} else {
-			$('div.widgetparams').hide(500);
+			$('div.widgetparams').hide(100);
 		}
 		
 	});

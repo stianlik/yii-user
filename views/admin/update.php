@@ -1,15 +1,13 @@
 <?php
 $this->breadcrumbs=array(
-	(UserModule::t('Users'))=>array('admin'),
-	$model->username=>array('view','id'=>$model->id),
-	(UserModule::t('Update')),
+	UserModule::t('Admin')=>array('/admin'),
+	UserModule::t('Brukere')=>array('/admin/user/admin'),
+	'Administrere brukere'=>array('admin'),
+	(UserModule::t('Update') . ' ' . $model->id),
 );
 $this->menu=array(
     array('label'=>UserModule::t('Create User'), 'url'=>array('create')),
-    array('label'=>UserModule::t('View User'), 'url'=>array('view','id'=>$model->id)),
     array('label'=>UserModule::t('Manage Users'), 'url'=>array('admin')),
-    array('label'=>UserModule::t('Manage Profile Field'), 'url'=>array('profileField/admin')),
-    array('label'=>UserModule::t('List User'), 'url'=>array('/user')),
 );
 ?>
 

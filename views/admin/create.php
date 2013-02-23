@@ -1,13 +1,13 @@
 <?php
 $this->breadcrumbs=array(
-	UserModule::t('Users')=>array('admin'),
+	'Admin' => array('/admin'),
+	UserModule::t('Users')=>array('/admin/user/admin'),
 	UserModule::t('Create'),
 );
 
 $this->menu=array(
     array('label'=>UserModule::t('Manage Users'), 'url'=>array('admin')),
-    array('label'=>UserModule::t('Manage Profile Field'), 'url'=>array('profileField/admin')),
-    array('label'=>UserModule::t('List User'), 'url'=>array('/user')),
+//     array('label'=>UserModule::t('Manage Profile Field'), 'url'=>array('profileField/admin')),
 );
 ?>
 <h1><?php echo UserModule::t("Create User"); ?></h1>

@@ -1,5 +1,19 @@
 <?php
-
+/**
+ * The followings are the available columns in table 'users':
+ * @property integer $id
+ * @property string $username
+ * @property string $password
+ * @property string $salt
+ * @property string $email
+ * @property string $activkey
+ * @property integer $createtime
+ * @property integer $lastvisit
+ * @property integer $superuser
+ * @property integer $status
+ * @property timestamp $create_at
+ * @property timestamp $lastvisit_at
+ */
 class User extends CActiveRecord
 {
 	const STATUS_NOACTIVE=0;
@@ -9,21 +23,8 @@ class User extends CActiveRecord
 	//TODO: Delete for next version (backward compatibility)
 	const STATUS_BANED=-1;
 	
-	/**
-	 * The followings are the available columns in table 'users':
-	 * @var integer $id
-	 * @var string $username
-	 * @var string $password
-	 * @var string $salt
-	 * @var string $email
-	 * @var string $activkey
-	 * @var integer $createtime
-	 * @var integer $lastvisit
-	 * @var integer $superuser
-	 * @var integer $status
-     * @var timestamp $create_at
-     * @var timestamp $lastvisit_at
-	 */
+	// Role stuff
+	public $searchProfileRole;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -47,31 +48,37 @@ class User extends CActiveRecord
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		
-		return ((Yii::app()->getModule('user')->isAdmin())?array(
-			array('username', 'length', 'max'=>20, 'min' => 3,'message' => UserModule::t("Incorrect username (length between 3 and 20 characters).")),
-			array('password', 'length', 'max'=>128, 'min' => 4,'message' => UserModule::t("Incorrect password (minimal length 4 symbols).")),
-			array('email', 'email'),
-			array('username', 'unique', 'message' => UserModule::t("This user's name already exists.")),
-			array('email', 'unique', 'message' => UserModule::t("This user's email address already exists.")),
-			array('username', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => UserModule::t("Incorrect symbols (A-z0-9).")),
-			array('status', 'in', 'range'=>array(self::STATUS_NOACTIVE,self::STATUS_ACTIVE,self::STATUS_BANNED)),
-			array('superuser', 'in', 'range'=>array(0,1)),
-            array('create_at', 'default', 'value' => date('Y-m-d H:i:s'), 'setOnEmpty' => true, 'on' => 'insert'),
-            array('lastvisit_at', 'default', 'value' => '0000-00-00 00:00:00', 'setOnEmpty' => true, 'on' => 'insert'),
-			array('username, email, superuser, status', 'required'),
-			array('superuser, status', 'numerical', 'integerOnly'=>true),
-			array('id, username, password, email, activkey, create_at, lastvisit_at, superuser, status', 'safe', 'on'=>'search'),
-		):((Yii::app()->user->id==$this->id)?array(
-			array('username, email', 'required'),
-			array('username', 'length', 'max'=>20, 'min' => 3,'message' => UserModule::t("Incorrect username (length between 3 and 20 characters).")),
-			array('email', 'email'),
-			array('username', 'unique', 'message' => UserModule::t("This user's name already exists.")),
-			array('username', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => UserModule::t("Incorrect symbols (A-z0-9).")),
-			array('email', 'unique', 'message' => UserModule::t("This user's email address already exists.")),
-		):array()));
+		if (Yii::app()->getModule('user')->isAdmin()) {
+			return array(
+				array('searchProfileRole', 'safe'),
+				array('username', 'length', 'max'=>20, 'min' => 3,'message' => UserModule::t("Incorrect username (length between 3 and 20 characters).")),
+				array('password', 'length', 'max'=>128, 'min' => 4,'message' => UserModule::t("Incorrect password (minimal length 4 symbols).")),
+				array('email', 'email'),
+				array('username', 'unique', 'message' => UserModule::t("This user's name already exists.")),
+				array('email', 'unique', 'message' => UserModule::t("This user's email address already exists.")),
+				array('username', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => UserModule::t("Incorrect symbols (A-z0-9).")),
+				array('status', 'in', 'range'=>array(self::STATUS_NOACTIVE,self::STATUS_ACTIVE,self::STATUS_BANNED)),
+				array('superuser', 'in', 'range'=>array(0,1)),
+	            array('create_at', 'default', 'value' => date('Y-m-d H:i:s'), 'setOnEmpty' => true, 'on' => 'insert'),
+	            array('lastvisit_at', 'default', 'value' => '0000-00-00 00:00:00', 'setOnEmpty' => true, 'on' => 'insert'),
+				array('username, email, superuser, status', 'required'),
+				array('superuser, status', 'numerical', 'integerOnly'=>true),
+				array('id, username, password, email, activkey, create_at, lastvisit_at, superuser, status', 'safe', 'on'=>'search'),
+			);
+		}
+		else if (Yii::app()->user->id==$this->id) {
+			return array(
+				array('username, email', 'required'),
+				array('username', 'length', 'max'=>20, 'min' => 3,'message' => UserModule::t("Incorrect username (length between 3 and 20 characters).")),
+				array('email', 'email'),
+				array('username', 'unique', 'message' => UserModule::t("This user's name already exists.")),
+				array('username', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => UserModule::t("Incorrect symbols (A-z0-9).")),
+				array('email', 'unique', 'message' => UserModule::t("This user's email address already exists.")),
+			);
+		}
+		else {
+			return array();
+		}
 	}
 
 	/**
@@ -104,6 +111,7 @@ class User extends CActiveRecord
 			'lastvisit_at' => UserModule::t("Last visit"),
 			'superuser' => UserModule::t("Superuser"),
 			'status' => UserModule::t("Status"),
+			'searchProfileRole' => 'Role'
 		);
 	}
 	
@@ -154,7 +162,7 @@ class User extends CActiveRecord
 			return isset($_items[$type]) ? $_items[$type] : false;
 	}
 	
-/**
+	/**
      * Retrieves a list of models based on the current search/filter conditions.
      * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
      */
@@ -165,6 +173,8 @@ class User extends CActiveRecord
 
         $criteria=new CDbCriteria;
         
+        $criteria->with = true;
+        $criteria->compare('profile.role',$this->searchProfileRole);
         $criteria->compare('id',$this->id);
         $criteria->compare('username',$this->username,true);
         $criteria->compare('password',$this->password);

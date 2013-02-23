@@ -12,6 +12,8 @@ class Profile extends UActiveRecord
 	private $_model;
 	private $_modelReg;
 	private $_rules = array();
+	
+	public static $roles = array('Undefined', 'Designer', 'Company', 'Organization');
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -171,5 +173,12 @@ class Profile extends UActiveRecord
 				$this->_model=ProfileField::model()->forOwner()->findAll();
 			return $this->_model;
 		}
+	}
+
+	public function getAttributeValue($name) {
+		if ($name == 'role')
+			return array_key_exists($this->$name, self::$roles) ? self::$roles[$this->$name] : $this->$name;
+		else 
+			return $this->$name;
 	}
 }
