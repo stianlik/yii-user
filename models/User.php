@@ -13,6 +13,8 @@
  * @property integer $status
  * @property timestamp $create_at
  * @property timestamp $lastvisit_at
+ * @property string $verifyPassword
+ * @property string $verifyCode
  */
 class User extends CActiveRecord
 {
@@ -22,6 +24,10 @@ class User extends CActiveRecord
 	
 	//TODO: Delete for next version (backward compatibility)
 	const STATUS_BANED=-1;
+	
+	// Extra properties
+	public $verifyPassword;
+	public $verifyCode;
 	
 	// Role stuff
 	public $searchProfileRole;
@@ -48,7 +54,26 @@ class User extends CActiveRecord
 	 */
 	public function rules()
 	{
-		if (Yii::app()->getModule('user')->isAdmin()) {
+		
+		// Registration
+		if ($this->getScenario() === 'register') {
+			$rules = array(
+				array('username, password, verifyPassword, email', 'required'),
+				array('username', 'length', 'max'=>20, 'min' => 3,'message' => UserModule::t("Incorrect username (length between 3 and 20 characters).")),
+				array('password', 'length', 'max'=>128, 'min' => 4,'message' => UserModule::t("Incorrect password (minimal length 4 symbols).")),
+				array('email', 'email'),
+				array('username', 'unique', 'message' => UserModule::t("This user's name already exists.")),
+				array('email', 'unique', 'message' => UserModule::t("This user's email address already exists.")),
+				//array('verifyPassword', 'compare', 'compareAttribute'=>'password', 'message' => UserModule::t("Retype Password is incorrect.")),
+				array('username', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => UserModule::t("Incorrect symbols (A-z0-9).")),
+			);
+			if (!(isset($_POST['ajax']) && $_POST['ajax']==='registration-form')) {
+				array_push($rules,array('verifyCode', 'captcha', 'allowEmpty'=>!UserModule::doCaptcha('registration')));
+			}
+			array_push($rules,array('verifyPassword', 'compare', 'compareAttribute'=>'password', 'message' => UserModule::t("Retype Password is incorrect.")));
+			return $rules;
+		}
+		else if (Yii::app()->getModule('user')->isAdmin()) {
 			return array(
 				array('searchProfileRole', 'safe'),
 				array('username', 'length', 'max'=>20, 'min' => 3,'message' => UserModule::t("Incorrect username (length between 3 and 20 characters).")),
