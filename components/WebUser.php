@@ -65,5 +65,9 @@ class WebUser extends CWebUser
     public function isAdmin() {
         return Yii::app()->getModule('user')->isAdmin();
     }
+    
+    public function isGenerated() {
+    	return $this->model()->profile->role == 4;
+    }
 
 }
