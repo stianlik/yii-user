@@ -69,5 +69,29 @@ class WebUser extends CWebUser
     public function isGenerated() {
     	return $this->model()->profile->role == 4;
     }
-
+    
+    public function isAppOwnerFor($model) {
+    	if ($model instanceof AppPage) {
+    		if ($model->app !== null) {
+    			return $this->id === $model->app->owner_id; 
+    		}
+    		else if ($model->appSection !== null) {
+    			return $this->id === $model->appSection->app->owner_id;
+    		}
+    	}
+    	return false;
+    }
+    
+    public function isAllowedToEditMetadataFor($model) {
+    	if (Yii::app()->user->isAdmin()) {
+    		return true;
+    	}
+    	if ($model instanceof AppPage) {
+	    	if (Yii::app()->user->isAppOwnerFor($model)) {
+	    		return true;
+	    	}
+	    	return $model->appSection !== null && $model->appSection->hasWidget(AppSection::WIDGET_METADATA);
+    	}
+    	return false;
+    }
 }
